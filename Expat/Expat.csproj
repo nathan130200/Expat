@@ -8,6 +8,7 @@
 		<RepositoryUrl>https://github.com/nathan130200/Expat</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>xml, parser, expat, streaming</PackageTags>
+		<Description>C#/.NET libexpat bindings.</Description>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageId>expat-bindings</PackageId>
