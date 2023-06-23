@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Expat Test: Benchmark": {
+      "commandName": "Project",
+      "commandLineArgs": "--benchmark"
+    },
+    "Expat Test: Run": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,18 +1,17 @@
-﻿using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
+﻿using BenchmarkDotNet.Running;
 using System.Text;
 using System.Web;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace Expat.Test;
 
 internal class Program
 {
-    static async Task Main(string[] args)
+    static void Main(string[] args)
     {
-        await Task.Yield();
-
+#if RELEASE
+        BenchmarkRunner.Run(typeof(Program).Assembly);
+        return;
+#else
         using (var parser = new Parser())
         {
             int depth = 0;
@@ -91,5 +90,6 @@ internal class Program
         }
 
         Console.ReadKey();
+#endif
     }
 }

@@ -87,3 +87,24 @@ Keep in mind about "Any Cpu", "x86" and "x64" architectures. In .NET they will i
 > "Any CPU", means that the assembly will run natively on the CPU it is currently running on. Meaning, it will run as 64-bit on a 64-bit machine and 32-bit on a 32-bit machine. If the assembly is called from a 64-bit application, it will perform as a 64-bit assembly and so on.
 
 <b>TL;DR</b>: If you compile with Any CPU on a 32bit machine it will have 32bit code and P/Invoker will need to load the 32bit version of libexpat. It will depend on your processor!
+
+
+### Benchmark
+
+```ini
+
+BenchmarkDotNet=v0.13.5, OS=Windows 10 (10.0.19045.3086/22H2/2022Update)
+Intel Core i5-4210U CPU 1.70GHz (Haswell), 1 CPU, 4 logical and 2 physical cores
+.NET SDK=7.0.304
+  [Host]   : .NET 7.0.7 (7.0.723.27404), X64 RyuJIT AVX2
+  ShortRun : .NET 7.0.7 (7.0.723.27404), X64 RyuJIT AVX2
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+
+```
+|             Method |      Mean |     Error |   StdDev |   Gen0 | Allocated |
+|------------------- |----------:|----------:|---------:|-------:|----------:|
+|    ParseUsingExpat | 274.50 μs | 71.947 μs | 3.944 μs | 4.3945 |    7.2 KB |
+| ParseUsingXElement |  13.08 μs |  7.598 μs | 0.416 μs | 7.1259 |  10.94 KB |
+
