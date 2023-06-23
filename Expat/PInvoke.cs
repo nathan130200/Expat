@@ -83,6 +83,7 @@ public static class PInvoke
 
     static PInvoke()
     {
-        Debug.WriteLine($"Using libexpat v{XML_ExpatVersion()}");
+        var version = Marshal.PtrToStringAnsi(XML_ExpatVersion());
+        Debug.WriteLine($"[libexpat] {version}");
     }
 }
