@@ -53,6 +53,15 @@ public class Parser : IDisposable
         _onProlog = new(OnPrologCallback);
 
         _handle = XML_ParserCreate(_encoding);
+        BindParserEvents();
+    }
+
+    protected void BindParserEvents()
+    {
+        // ensure not disposed first!
+        ThrowIfDisposed();
+
+        // bind (or rebind) callbacks to parser instance.
         XML_SetElementHandler(_handle, _onElementStart, _onElementEnd);
         XML_SetCdataSectionHandler(_handle, _onCdataStart, _onCdataEnd);
         XML_SetCharacterDataHandler(_handle, _onCharacterData);
@@ -173,6 +182,9 @@ public class Parser : IDisposable
 
         if (XML_ParserReset(_handle, _encoding) == 0)
             throw new ExpatException(GetLastError());
+
+        // since all events are cleared from parser we must rebind them.
+        BindParserEvents();
     }
 
     public void Dispose()
