@@ -79,3 +79,11 @@ There are no secrets at this point.
 - Also you can clone the repository from [libexpat](https://github.com/libexpat/libexpat) and compile manually to get the binaries. 
 
 - Even better, there are already pre compiled releases ready for use! [https://github.com/libexpat/libexpat/releases/](https://github.com/libexpat/libexpat/releases/)
+
+### Warning
+
+Keep in mind about "Any Cpu", "x86" and "x64" architectures. In .NET they will impact on P/Invoker. If you try to load 64bit libexpat in a 32bit process it will fail and crash! And about "Any Cpu" architecture:
+
+> "Any CPU", means that the assembly will run natively on the CPU it is currently running on. Meaning, it will run as 64-bit on a 64-bit machine and 32-bit on a 32-bit machine. If the assembly is called from a 64-bit application, it will perform as a 64-bit assembly and so on.
+
+<b>TL;DR</b>: If you compile with Any CPU on a 32bit machine it will have 32bit code and P/Invoker will need to load the 32bit version of libexpat. It will depend on your processor!
