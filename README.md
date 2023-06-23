@@ -63,6 +63,7 @@ using(var parser = new Parser())
 - The `Parser` instance may be reusable as long as you **ONLY** and **EXCLUSIVELY** allow one use at a time! (eg: assigns and that instance becomes "borrowed" and cannot be used elsewhere)
 - As recommended by libexpat itself call `Parser.Reset` whenever necessary to reuse the parser and also free memory. In the original `XML_ParserReset` it removes all handlers but in the builtin parser implemented in this bindings library, it automatically rebinds the callbacks to reuse the same parser instance.
 - As stated earlier there is no guarantee of multithreading support, ideal would be to use semaphore mechanisms or locks to ensure parser integrity and avoid unexpected crashes from corrupted memory and other related p/invoking errors!
+- Use Try/Catch to handle expat errors. Every expat function that fails will throw an `ExpatException` with respective error code and description about the error.
  
 ## How to get libexpat?
 
