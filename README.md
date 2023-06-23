@@ -74,4 +74,8 @@ Just open a terminal (with VCPKG already installed and configured) and type:
 
 After that, just get the library from the VCPKG folder or add the vcpkg folder to your `%PATH%` and the library will load without problems. (Already tested and working with Windows x86 and x64)
 
-There are no secrets at this point. Or... You can clone the repository from [libexpat](https://github.com/libexpat/libexpat) and compile manually to get the binaries. Or even if you prefer, there are already compiled releases ready for use! [https://github.com/libexpat/libexpat/releases/](https://github.com/libexpat/libexpat/releases/)
+There are no secrets at this point. 
+
+- Also you can clone the repository from [libexpat](https://github.com/libexpat/libexpat) and compile manually to get the binaries. 
+
+- Even better, there are already pre compiled releases ready for use! [https://github.com/libexpat/libexpat/releases/](https://github.com/libexpat/libexpat/releases/)
