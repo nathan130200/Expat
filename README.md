@@ -1,5 +1,5 @@
 # Expat
-![Nuget](https://img.shields.io/nuget/v/expat-bindings?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2Fexpat-bindings%2F)<br>
+[![Nuget](https://img.shields.io/nuget/v/expat-bindings?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2Fexpat-bindings%2F)](https://www.nuget.org/packages/expat-bindings/)<br>
 [Expat](https://github.com/libexpat/libexpat) bindings for .NET/C#. 
 
 ## About
