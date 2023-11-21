@@ -6,6 +6,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        // using vcpkg helper to resolve libexpat location.
         LibraryResolver.UseVcpkg(@"C:\VCPKG", "x64-windows");
 
         using (var parser = new Parser())
@@ -71,28 +72,18 @@ internal class Program
 
             try
             {
-                // XML generated using https://codebeautify.org/generate-random-xml
-                // used for testing all possible events in expat parser.
-
                 var fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample.xml");
                 using var fs = File.OpenRead(fileName);
 
                 var buf = new byte[8];
                 int count;
 
-                ParserStatus status = default;
+                // simulate long I/O operation (eg.: network socket)
 
                 while ((count = fs.Read(buf)) > 0)
-                {
-                    status = default;
-                    parser.Feed(buf, count);
-                    PInvoke.XML_GetParsingStatus(parser.CPointer, ref status);
-                }
+                    parser.Feed(buf, count, fs.Position != fs.Length - 1);
 
                 parser.Feed(buf, 0);
-
-                status = default;
-                PInvoke.XML_GetParsingStatus(parser.CPointer, ref status);
             }
             catch (Exception ex)
             {

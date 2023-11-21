@@ -1,4 +1,5 @@
 # Expat
+![Nuget](https://img.shields.io/nuget/v/expat-bindings?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2Fexpat-bindings%2F)<br>
 [Expat](https://github.com/libexpat/libexpat) bindings for .NET/C#. 
 
 ## About
@@ -15,20 +16,18 @@ This bindings already has a simple parser implemented by default, which basicall
 
 ```cs
 
-using Expat;
+// using vcpkg helper to resolve libexpat location.
 
-// other stuff before...
+LibraryResolver.UseVcpkg(@"C:\VCPKG", "x64-windows");
 
 using (var parser = new Parser())
 {
     int depth = 0;
 
-    // handle start tag
-
-    parser.OnElementStart += (s, e) =>
+    parser.OnElementStart += (e) =>
     {
         Console.WriteLine(new string(' ', depth++)
-            + "Element: " + e.TagName);
+            + "Element: " + e.Name);
 
         if (e.Attributes.Any())
         {
@@ -43,9 +42,7 @@ using (var parser = new Parser())
         }
     };
 
-    // handle text nodes.
-
-    parser.OnText += (s, e) =>
+    parser.OnText += (e) =>
     {
         if (string.IsNullOrWhiteSpace(e.Value))
             return;
@@ -53,62 +50,55 @@ using (var parser = new Parser())
         Console.WriteLine(new string(' ', depth) + "Text: " + HttpUtility.UrlEncode(e.Value));
     };
 
-    // handle comments
-
-    parser.OnComment += (s, e) =>
+    parser.OnComment += (e) =>
     {
         Console.WriteLine(new string(' ', depth) + "Comment: " + e.Value);
     };
 
-    // handle CData sections
-
-    parser.OnCdata += (s, e) =>
+    parser.OnCdata += (e) =>
     {
         Console.WriteLine(new string(' ', depth) + "Cdata: " +
             e.Value
-            .Replace("\n", @"\n")
-            .Replace("\r", @"\r")
-            .Replace("\f", @"\f")
-            .Replace("\t", @"\t"));
+            .Replace("\n", "\\n")
+            .Replace("\r", "\\r")
+            .Replace("\f", "\\f")
+            .Replace("\t", "\\t"));
     };
 
-    // 
-    // handle PI
-    // 
-    //      &lt;?my_key my_data ?&gt;
-    // 
-    // 
-    parser.OnProcessingInstruction += (s, e) =>
+    parser.OnProcessingInstruction += (e) =>
     {
         Console.WriteLine("ProcessingInstruction: target={0}, data={1}", e.Target, e.Data);
     };
 
-    // handle end tag
-    parser.OnElementEnd += (s, e) =>
+    parser.OnElementEnd += (e) =>
     {
-        Console.WriteLine(new string(' ', --depth) + "EndElement: {0}", e.TagName);
+        Console.WriteLine(new string(' ', --depth) + "EndElement: {0}", e.Value);
     };
 
-    // handle xml prolog: version, encoding and standalone
-
-    parser.OnProlog += (s, e) =>
+    parser.OnProlog += (e) =>
     {
         Console.WriteLine("Prolog: version={0}, encoding={1}, standalone={2}", e.Version,
-            e.Encoding, e.Standalone);
+            e.Encoding.WebName, e.Standalone);
     };
 
-    byte[] xmlBytes = ...; // load some XML bytes from file, network socket, etc.
+    try
+    {
+        var fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample.xml");
+        using var fs = File.OpenRead(fileName);
 
-    // feed bytes to the parser.
-    var code = parser.Feed(sample, sample.Length);
+        var buf = new byte[8];
+        int count;
 
-    // check if was success (code == OK)
+        // simulate long I/O operation (eg.: network socket)
 
-    if(code != Result.Success) {
-        if(code == Result.Error) {
-            var errorCode = parser.GetLastError();
-            // handle error code with respective descriptions
-        }
+        while ((count = fs.Read(buf)) > 0)
+            parser.Feed(buf, count, fs.Position != fs.Length - 1);
+
+        parser.Feed(buf, 0);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
     }
 }
 
