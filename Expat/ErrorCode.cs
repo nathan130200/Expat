@@ -1,6 +1,6 @@
 ﻿namespace Expat;
 
-public enum XmlError
+public enum ErrorCode
 {
     None,
     NoMemory,
@@ -46,4 +46,4 @@ public enum XmlError
     InvalidArgument,
     NoBuffer,
     AmplificationLimitBreach
-};
+}

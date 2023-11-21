@@ -1,6 +1,11 @@
 ﻿namespace Expat.EventArgs;
 
-public class TextEventArgs : ParserEventArgs
+public sealed class TextEventArgs : ParserEventArgs
 {
-    public string Value { get; init; }
+    public TextEventArgs(Parser parser, string value) : base(parser)
+    {
+        Value = value;
+    }
+
+    public string Value { get; }
 }

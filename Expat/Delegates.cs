@@ -24,4 +24,5 @@ public delegate void XML_CdataSectionHandler(nint userData);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void XML_ProcessingInstructionHandler(nint userData, nint dataPtr, nint targetPtr);
 
-public delegate void ParserEventHandler<in TEventArgs>(Parser p, TEventArgs e) where TEventArgs : ParserEventArgs;
+public delegate void ParserEventHandler<in TEventArgs>(TEventArgs e)
+    where TEventArgs : ParserEventArgs;

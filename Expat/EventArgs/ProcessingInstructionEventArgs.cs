@@ -1,7 +1,13 @@
 ﻿namespace Expat.EventArgs;
 
-public class ProcessingInstructionEventArgs : ParserEventArgs
+public sealed class ProcessingInstructionEventArgs : ParserEventArgs
 {
+    public ProcessingInstructionEventArgs(Parser parser, string target, string data) : base(parser)
+    {
+        Target = target;
+        Data = data;
+    }
+
     public string Target { get; init; }
     public string Data { get; init; }
 }

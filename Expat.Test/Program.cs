@@ -1,6 +1,4 @@
-﻿using BenchmarkDotNet.Running;
-using System.Text;
-using System.Web;
+﻿using System.Web;
 
 namespace Expat.Test;
 
@@ -8,18 +6,16 @@ internal class Program
 {
     static void Main(string[] args)
     {
-#if RELEASE
-        BenchmarkRunner.Run(typeof(Program).Assembly);
-        return;
-#else
+        LibraryResolver.UseVcpkg(@"C:\VCPKG", "x64-windows");
+
         using (var parser = new Parser())
         {
             int depth = 0;
 
-            parser.OnElementStart += (s, e) =>
+            parser.OnElementStart += (e) =>
             {
                 Console.WriteLine(new string(' ', depth++)
-                    + "Element: " + e.TagName);
+                    + "Element: " + e.Name);
 
                 if (e.Attributes.Any())
                 {
@@ -34,7 +30,7 @@ internal class Program
                 }
             };
 
-            parser.OnText += (s, e) =>
+            parser.OnText += (e) =>
             {
                 if (string.IsNullOrWhiteSpace(e.Value))
                     return;
@@ -42,34 +38,35 @@ internal class Program
                 Console.WriteLine(new string(' ', depth) + "Text: " + HttpUtility.UrlEncode(e.Value));
             };
 
-            parser.OnComment += (s, e) =>
+            parser.OnComment += (e) =>
             {
                 Console.WriteLine(new string(' ', depth) + "Comment: " + e.Value);
             };
 
-            parser.OnCdata += (s, e) =>
+            parser.OnCdata += (e) =>
             {
-                Console.WriteLine(new string(' ', depth) + "Cdata: " + e.Value
+                Console.WriteLine(new string(' ', depth) + "Cdata: " +
+                    e.Value
                     .Replace("\n", @"\n")
                     .Replace("\r", @"\r")
                     .Replace("\f", @"\f")
                     .Replace("\t", @"\t"));
             };
 
-            parser.OnProcessingInstruction += (s, e) =>
+            parser.OnProcessingInstruction += (e) =>
             {
                 Console.WriteLine("ProcessingInstruction: target={0}, data={1}", e.Target, e.Data);
             };
 
-            parser.OnElementEnd += (s, e) =>
+            parser.OnElementEnd += (e) =>
             {
-                Console.WriteLine(new string(' ', --depth) + "EndElement: {0}", e.TagName);
+                Console.WriteLine(new string(' ', --depth) + "EndElement: {0}", e.Value);
             };
 
-            parser.OnProlog += (s, e) =>
+            parser.OnProlog += (e) =>
             {
                 Console.WriteLine("Prolog: version={0}, encoding={1}, standalone={2}", e.Version,
-                    e.Encoding, e.Standalone);
+                    e.Encoding.WebName, e.Standalone);
             };
 
             try
@@ -77,11 +74,25 @@ internal class Program
                 // XML generated using https://codebeautify.org/generate-random-xml
                 // used for testing all possible events in expat parser.
 
-                parser.Reset();
+                var fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample.xml");
+                using var fs = File.OpenRead(fileName);
 
-                var sample = Encoding.UTF8.GetBytes(@"<?xml version=""1.0"" encoding=""UTF-8"" ?><root><j4pSpl6r17-E3E stopped=""shot""><ZLIXTS9oY23T1Z7F neighborhood=""flag""><![CDATA[trap]]><So><nQODMLpRM-gCMIuzlA2Oe fairly=""careful"">1308615073.4641433</nQODMLpRM-gCMIuzlA2Oe><i describe=""disease"">-143351890</i></So><n><q sang=""twice"">-1065943463.8838549</q><![CDATA[correct]]><ueVO4y25LSdug>Rv"")5[.P3</ueVO4y25LSdug></n><!--problem chain region family--></ZLIXTS9oY23T1Z7F><L0o3lRmMMs03KIqS>-591225543.8601017</L0o3lRmMMs03KIqS></j4pSpl6r17-E3E><![CDATA[come]]><t6YzcOA4bJ-wVOSbZn><XUp-mkT buy=""far"">W&amp;7oo//U/&amp;JZc4TmW6]5xEn</XUp-mkT><wFssAyhdCGJaBju02 after=""welcome""><mp9Ub_Sq><o7PBrANNkbUVyEe>X8i</o7PBrANNkbUVyEe><!--breakfast tea needle--><muhS7hYaSwm>-237605011.8712139</muhS7hYaSwm></mp9Ub_Sq><UOUi0pnr parts=""careful""><!--stared so hello-->-697712748<![CDATA[flower repeat our anyone six amount seems]]></UOUi0pnr></wFssAyhdCGJaBju02></t6YzcOA4bJ-wVOSbZn></root>");
+                var buf = new byte[8];
+                int count;
 
-                parser.Update(sample, sample.Length);
+                ParserStatus status = default;
+
+                while ((count = fs.Read(buf)) > 0)
+                {
+                    status = default;
+                    parser.Feed(buf, count);
+                    PInvoke.XML_GetParsingStatus(parser.CPointer, ref status);
+                }
+
+                parser.Feed(buf, 0);
+
+                status = default;
+                PInvoke.XML_GetParsingStatus(parser.CPointer, ref status);
             }
             catch (Exception ex)
             {
@@ -90,6 +101,5 @@ internal class Program
         }
 
         Console.ReadKey();
-#endif
     }
 }

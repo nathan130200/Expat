@@ -1,6 +1,6 @@
 ﻿namespace Expat;
 
-public enum XmlStatus
+public enum Result
 {
     Error = 0,
     Success = 1,
