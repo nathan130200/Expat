@@ -12,7 +12,7 @@ unsafe
 
     var archive = ZipFile.OpenRead("zipfile.zip");
 
-    using var parser = new Parser();
+    using var parser = new ExpatParser();
 
     int depth = 0;
 

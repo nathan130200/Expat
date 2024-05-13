@@ -37,12 +37,12 @@ public class ExpatException : Exception
 
     public ExpatException(Error error) : base(GetMessage(error))
     {
-
+        Code = error;
     }
 
     public ExpatException(Error error, Exception? innerException) : base(GetMessage(error), innerException)
     {
-
+        Code = error;
     }
 
     static string GetMessage(Error code)
@@ -53,7 +53,6 @@ public class ExpatException : Exception
         if (code == Error.None)
             return "No errors.";
 
-        GetErrorString(code, out var msg);
-        return msg;
+        return GetErrorString(code);
     }
 }

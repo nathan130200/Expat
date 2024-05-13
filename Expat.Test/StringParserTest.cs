@@ -43,7 +43,7 @@ public class StringParserTest
         ms.Write(Encoding.UTF8.GetBytes(xml));
         ms.Position = 0;
 
-        using var parser = new Parser();
+        using var parser = new ExpatParser();
 
         while ((cnt = ms.Read(buf)) > 0)
         {
@@ -56,7 +56,7 @@ public class StringParserTest
     [TestMethod]
     public void ParseAfterDisposed()
     {
-        Parser p;
+        ExpatParser p;
         {
             p = new();
             p.Dispose();

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Expat.Native;
 
-public unsafe class Parser : IDisposable
+public unsafe class ExpatParser : IDisposable
 {
     public event Action<string, string?, bool?>? OnProlog;
     public event Action<string, string?>? OnProcessingInstruction;
@@ -34,7 +34,51 @@ public unsafe class Parser : IDisposable
     public nint CPointer
         => _cpointer;
 
-    public Parser(EncodingType type = EncodingType.UTF8)
+    public int ByteIndex
+    {
+        get
+        {
+            if (_disposed)
+                return -1;
+
+            return GetCurrentByteIndex(_cpointer);
+        }
+    }
+
+    public int ByteCount
+    {
+        get
+        {
+            if (_disposed)
+                return -1;
+
+            return GetCurrentByteCount(_cpointer);
+        }
+    }
+
+    public long LineNumber
+    {
+        get
+        {
+            if (_disposed)
+                return -1;
+
+            return GetCurrentLineNumber(_cpointer);
+        }
+    }
+
+    public long ColumnNumber
+    {
+        get
+        {
+            if (_disposed)
+                return -1;
+
+            return GetCurrentColumnNumber(_cpointer);
+        }
+    }
+
+    public ExpatParser(EncodingType type = EncodingType.UTF8)
     {
         if (!Enum.IsDefined(type))
             type = EncodingType.UTF8;
@@ -76,8 +120,8 @@ public unsafe class Parser : IDisposable
     protected void FireOnProcessingInstruction(string target, string? data)
         => OnProcessingInstruction?.Invoke(target, data);
 
-    public static Parser GetParser(nint ptr)
-        => (Parser)GCHandle.FromIntPtr(ptr).Target;
+    public static ExpatParser GetParser(nint ptr)
+        => (ExpatParser)GCHandle.FromIntPtr(ptr).Target;
 
     static void StartElementHandlerImpl(nint cls, XML_Char* name_, XML_Char** attrs_)
     {
