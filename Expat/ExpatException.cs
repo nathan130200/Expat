@@ -1,24 +1,59 @@
-﻿namespace Expat;
-using System.Runtime.InteropServices;
-using static Expat.PInvoke;
+﻿using Expat.Native;
+
+namespace Expat;
+
+using static PInvoke;
 
 public class ExpatException : Exception
 {
-    public ErrorCode Code { get; init; }
+    public long LineNumber { get; internal set; }
+    public long LinePosition { get; internal set; }
+    public int ByteIndex { get; internal set; }
+    public int ByteCount { get; internal set; }
+    public Error Code { get; init; }
 
-    internal ExpatException(ErrorCode code, string msg) : base(msg)
+    public ExpatException()
     {
-        Code = code;
+
     }
 
-    internal ExpatException(ErrorCode code) : this(code, GetErrorString(code))
+    internal unsafe void SetXmlInfo(nint parser)
+    {
+        LineNumber = GetCurrentLineNumber(parser);
+        LinePosition = GetCurrentColumnNumber(parser);
+        ByteIndex = GetCurrentByteIndex(parser);
+        ByteCount = GetCurrentByteCount(parser);
+    }
+
+    public ExpatException(string? message) : base(message)
     {
 
     }
 
-    internal static string GetErrorString(ErrorCode code)
+    public ExpatException(string? message, Exception? innerException) : base(message, innerException)
     {
-        nint buf = XML_ErrorString(code);
-        return Marshal.PtrToStringAnsi(buf);
+
+    }
+
+    public ExpatException(Error error) : base(GetMessage(error))
+    {
+
+    }
+
+    public ExpatException(Error error, Exception? innerException) : base(GetMessage(error), innerException)
+    {
+
+    }
+
+    static string GetMessage(Error code)
+    {
+        if (!Enum.IsDefined(code))
+            return "Unknown error";
+
+        if (code == Error.None)
+            return "No errors.";
+
+        GetErrorString(code, out var msg);
+        return msg;
     }
 }

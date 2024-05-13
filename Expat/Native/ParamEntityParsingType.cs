@@ -1,4 +1,4 @@
-﻿namespace Expat;
+﻿namespace Expat.Native;
 
 public enum ParamEntityParsingType
 {

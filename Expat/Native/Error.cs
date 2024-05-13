@@ -1,6 +1,6 @@
-﻿namespace Expat;
+﻿namespace Expat.Native;
 
-public enum ErrorCode
+public enum Error
 {
     None,
     NoMemory,
@@ -34,7 +34,7 @@ public enum ErrorCode
     IncompletePe,
     XmlDecl,
     TextDecl,
-    Publicid,
+    PublicId,
     Suspended,
     NotSuspended,
     Aborted,
