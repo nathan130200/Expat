@@ -21,22 +21,22 @@ internal unsafe struct EXPAT_FEATURE_INTERFACE
     internal uint Value;
 }
 
-internal enum FeatureType
+public enum FeatureType
 {
-    XML_FEATURE_END = 0,
-    XML_FEATURE_UNICODE,
-    XML_FEATURE_UNICODE_WCHAR_T,
-    XML_FEATURE_DTD,
-    XML_FEATURE_CONTEXT_BYTES,
-    XML_FEATURE_MIN_SIZE,
-    XML_FEATURE_SIZEOF_XML_CHAR,
-    XML_FEATURE_SIZEOF_XML_LCHAR,
-    XML_FEATURE_NS,
-    XML_FEATURE_LARGE_SIZE,
-    XML_FEATURE_ATTR_INFO,
-    XML_FEATURE_BILLION_LAUGHS_ATTACK_PROTECTION_MAXIMUM_AMPLIFICATION_DEFAULT,
-    XML_FEATURE_BILLION_LAUGHS_ATTACK_PROTECTION_ACTIVATION_THRESHOLD_DEFAULT,
-    XML_FEATURE_GE
+    None = 0,
+    Unicode,
+    UnicodeWideChar,
+    Dtd,
+    ContextBytes,
+    MinSize,
+    SizeOfXmlChar,
+    SizeOfXmlLChar,
+    Ns,
+    LargeSize,
+    AttrInfo,
+    BillionLaughsAttackProtectionMaximumAmplificationDefault,
+    BillionLaughsAttackProtectionActivationThresholdDefault,
+    Ge
 }
 
 public unsafe static class PInvoke
@@ -122,7 +122,7 @@ public unsafe static class PInvoke
         var result = new List<ExpatFeatureInfo>();
         var ptr = (EXPAT_FEATURE_INTERFACE*)_GetFeatureList();
 
-        while (ptr->Type != FeatureType.XML_FEATURE_END)
+        while (ptr->Type != FeatureType.None)
         {
             result.Add(new ExpatFeatureInfo
             {
