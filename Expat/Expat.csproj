@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>annotations</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -17,7 +17,7 @@
 		<PackageId>expat-bindings</PackageId>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>2.0</Version>
+		<Version>2.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
