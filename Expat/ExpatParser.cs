@@ -31,6 +31,35 @@ public unsafe class ExpatParser : IDisposable
     private string _encodingName;
     private Encoding _encoding;
 
+    public ExpatParser(EncodingType type = EncodingType.UTF8)
+    {
+        if (!Enum.IsDefined(type))
+            type = EncodingType.UTF8;
+
+        (_encodingName, _encoding) = type.GetEncoding();
+
+        _cpointer = ParserCreate(_encodingName);
+
+        if (_cpointer == nint.Zero)
+        {
+            _disposed = true;
+            throw new ExpatException("Unable to create parser instance.");
+        }
+
+        _cdata = new StringBuilder();
+        _class = GCHandle.Alloc(this, GCHandleType.Weak);
+
+        Init();
+    }
+
+    public void SetEncoding(EncodingType type)
+    {
+        ThrowIfDisposed();
+        (_encodingName, _encoding) = type.GetEncoding();
+        var result = PInvoke.SetEncoding(_cpointer, _encodingName);
+        ThrowIfFailed(result, _cpointer);
+    }
+
     public nint CPointer
         => _cpointer;
 
@@ -56,6 +85,14 @@ public unsafe class ExpatParser : IDisposable
         }
     }
 
+    public void SetExceptionInfo(ExpatException ex)
+    {
+        if (_disposed)
+            return;
+
+        ex.SetParserInfo(_cpointer);
+    }
+
     public long LineNumber
     {
         get
@@ -76,27 +113,6 @@ public unsafe class ExpatParser : IDisposable
 
             return GetCurrentColumnNumber(_cpointer);
         }
-    }
-
-    public ExpatParser(EncodingType type = EncodingType.UTF8)
-    {
-        if (!Enum.IsDefined(type))
-            type = EncodingType.UTF8;
-
-        (_encodingName, _encoding) = GetEncoding(type);
-
-        _cpointer = ParserCreate(_encodingName);
-
-        if (_cpointer == nint.Zero)
-        {
-            _disposed = true;
-            throw new ExpatException("Unable to create parser instance.");
-        }
-
-        _cdata = new StringBuilder();
-        _class = GCHandle.Alloc(this, GCHandleType.Weak);
-
-        Init();
     }
 
     protected void FireOnElementStart(string name, Dictionary<string, string> attrs)
@@ -123,19 +139,19 @@ public unsafe class ExpatParser : IDisposable
     public static ExpatParser GetParser(nint ptr)
         => (ExpatParser)GCHandle.FromIntPtr(ptr).Target;
 
-    static void StartElementHandlerImpl(nint cls, XML_Char* name_, XML_Char** attrs_)
+    static void StartElementHandlerImpl(nint cls, XML_Char* _name, XML_Char** _attrs)
     {
         var parser = GetParser(cls);
-        var name = new string(name_);
+        var name = new string(_name);
         var attrs = new Dictionary<string, string>();
 
-        var numAttributes = GetSpecifiedAttributeCount(parser.CPointer);
+        var count = GetSpecifiedAttributeCount(parser._cpointer);
 
-        for (int i = 0; i < numAttributes; i += 2)
+        for (int i = 0; i < count; i += 2)
         {
-            var attrName = new string(attrs_[i]);
-            var attrVal = new string(attrs_[i + 1]);
-            attrs[attrName] = attrVal;
+            var key = new string(_attrs[i]);
+            var value = new string(_attrs[i + 1]);
+            attrs[key] = value;
         }
 
         parser.FireOnElementStart(name, attrs);
@@ -242,7 +258,7 @@ public unsafe class ExpatParser : IDisposable
         if (s == Status.Error)
         {
             var ex = new ExpatException(GetErrorCode(ptr));
-            ex.SetXmlInfo(ptr);
+            ex.SetParserInfo(ptr);
             throw ex;
         }
     }

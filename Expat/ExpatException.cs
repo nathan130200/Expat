@@ -6,6 +6,7 @@ using static PInvoke;
 
 public class ExpatException : Exception
 {
+    private volatile bool _haveParserInfo;
     public long LineNumber { get; internal set; }
     public long LinePosition { get; internal set; }
     public int ByteIndex { get; internal set; }
@@ -17,12 +18,19 @@ public class ExpatException : Exception
 
     }
 
-    internal unsafe void SetXmlInfo(nint parser)
+    internal unsafe void SetParserInfo(nint parser)
     {
-        LineNumber = GetCurrentLineNumber(parser);
-        LinePosition = GetCurrentColumnNumber(parser);
-        ByteIndex = GetCurrentByteIndex(parser);
-        ByteCount = GetCurrentByteCount(parser);
+        if (parser == nint.Zero)
+            return;
+
+        if (!_haveParserInfo)
+        {
+            _haveParserInfo = true;
+            LineNumber = GetCurrentLineNumber(parser);
+            LinePosition = GetCurrentColumnNumber(parser);
+            ByteIndex = GetCurrentByteIndex(parser);
+            ByteCount = GetCurrentByteCount(parser);
+        }
     }
 
     public ExpatException(string? message) : base(message)
