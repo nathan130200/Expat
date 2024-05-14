@@ -2,10 +2,6 @@
 [![Nuget](https://img.shields.io/nuget/v/expat-bindings?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2Fexpat-bindings%2F)](https://www.nuget.org/packages/expat-bindings/)<br>
 [Expat](https://github.com/libexpat/libexpat) bindings for .NET/C#. 
 
-## About
-Expat, a C99 library for parsing [XML 1.0 Fourth Edition](https://www.w3.org/TR/2006/REC-xml-20060816/), started by [James Clark](https://en.wikipedia.org/wiki/James_Clark_%28programmer%29) in 1997. Expat is a stream-oriented XML parser. This means that you register handlers with the parser before starting the parse. These handlers are called when the parser discovers the associated structures in the document being parsed from.
+Expat, a C99 library for parsing [XML 1.0 Fourth Edition](https://www.w3.org/TR/2006/REC-xml-20060816/), started by [James Clark](https://en.wikipedia.org/wiki/James_Clark_%28programmer%29) in 1997. Expat is a stream-oriented XML parser.
 
-## Bindings
 These bindings are intended to provide most of the features available between libexpat and .NET
-
-All P/Invoking functions added can be found in `PInvoke` class that is publicy visible.
