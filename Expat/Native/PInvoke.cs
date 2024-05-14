@@ -8,17 +8,17 @@ using Expat.Native;
 namespace Expat.Native;
 
 [StructLayout(LayoutKind.Sequential)]
-internal struct EXPAT_PARSER_INTERFACE
+public struct EXPAT_PARSER_INTERFACE
 {
-    internal readonly nint UserData;
+    public readonly nint UserData;
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct EXPAT_FEATURE_INTERFACE
+public unsafe struct EXPAT_FEATURE_INTERFACE
 {
-    internal FeatureType Type;
-    internal XML_Char* Name;
-    internal uint Value;
+    public FeatureType Type;
+    public XML_Char* Name;
+    public uint Value;
 }
 
 public enum FeatureType
@@ -61,63 +61,63 @@ public unsafe static class PInvoke
     }
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_ParserCreate")]
-    internal static extern nint ParserCreate(string? encoding);
+    public static extern nint ParserCreate(string? encoding);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_ParserFree")]
-    internal static extern void ParserFree(nint parser);
+    public static extern void ParserFree(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_ParserReset")]
     [return: MarshalAs(UnmanagedType.I1)]
-    internal static extern bool ParserReset(nint parser, string? encoding);
+    public static extern bool ParserReset(nint parser, string? encoding);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_Parse")]
-    internal static extern Status Parse(nint parser, byte* buffer,
+    public static extern Status Parse(nint parser, byte* buffer,
         [MarshalAs(UnmanagedType.I4)] int length,
         [MarshalAs(UnmanagedType.I1)] bool isFinal);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_StopParser")]
-    internal static extern Status StopParser(nint parser, [MarshalAs(UnmanagedType.I1)] bool resumable);
+    public static extern Status StopParser(nint parser, [MarshalAs(UnmanagedType.I1)] bool resumable);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_ResumeParser")]
-    internal static extern Status ResumeParser(nint parser);
+    public static extern Status ResumeParser(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetParsingStatus")]
     static extern void _GetParsingStatus(nint parser, [In, Out] ref ParsingState state);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetStartElementHandler")]
-    internal static extern void SetStartElementHandler(nint parser, StartElementHandler start);
+    public static extern void SetStartElementHandler(nint parser, StartElementHandler start);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetEndElementHandler")]
-    internal static extern void SetEndElementHandler(nint parser, StartElementHandler start);
+    public static extern void SetEndElementHandler(nint parser, StartElementHandler start);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetElementHandler")]
-    internal static extern void SetElementHandler(nint parser, StartElementHandler start, EndElementHandler end);
+    public static extern void SetElementHandler(nint parser, StartElementHandler start, EndElementHandler end);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetCharacterDataHandler")]
-    internal static extern void SetCharacterDataHandler(nint parser, CharacterDataHandler handler);
+    public static extern void SetCharacterDataHandler(nint parser, CharacterDataHandler handler);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetProcessingInstructionHandler")]
-    internal static extern void SetProcessingInstructionHandler(nint parser, ProcessingInstructionHandler handler);
+    public static extern void SetProcessingInstructionHandler(nint parser, ProcessingInstructionHandler handler);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetStartCdataSectionHandler")]
-    internal static extern void SetStartCdataSectionHandler(nint parser, CdataSectionHandler start);
+    public static extern void SetStartCdataSectionHandler(nint parser, CdataSectionHandler start);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetEndCdataSectionHandler")]
-    internal static extern void SetEndCdataSectionHandler(nint parser, CdataSectionHandler end);
+    public static extern void SetEndCdataSectionHandler(nint parser, CdataSectionHandler end);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetCdataSectionHandler")]
-    internal static extern void SetCdataSectionHandler(nint parser, CdataSectionHandler start, CdataSectionHandler end);
+    public static extern void SetCdataSectionHandler(nint parser, CdataSectionHandler start, CdataSectionHandler end);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetCommentHandler")]
-    internal static extern void SetCommentHandler(nint parser, CommentHandler handler);
+    public static extern void SetCommentHandler(nint parser, CommentHandler handler);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetXmlDeclHandler")]
-    internal static extern void SetPrologHandler(nint parser, PrologHandler handler);
+    public static extern void SetPrologHandler(nint parser, PrologHandler handler);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetFeatureList")]
     static extern EXPAT_FEATURE_INTERFACE* _GetFeatureList();
 
-    internal unsafe static IReadOnlyList<ExpatFeatureInfo> GetFeatureList()
+    public unsafe static IReadOnlyList<ExpatFeatureInfo> GetFeatureList()
     {
         var result = new List<ExpatFeatureInfo>();
         var ptr = (EXPAT_FEATURE_INTERFACE*)_GetFeatureList();
@@ -138,60 +138,60 @@ public unsafe static class PInvoke
     }
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetErrorCode")]
-    internal static extern Error GetErrorCode(nint parser);
+    public static extern Error GetErrorCode(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_ErrorString")]
     static extern XML_Char* _GetErrorString(Error error);
 
-    internal static string GetErrorString(Error error)
+    public static string GetErrorString(Error error)
         => new string(_GetErrorString(error));
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_ExpatVersion", CharSet = CharSet.Ansi)]
     static extern XML_Char* _GetExpatVersionString();
 
-    internal static string GetExpatVersionString(out string version)
+    public static string GetExpatVersionString(out string version)
         => version = new string(_GetExpatVersionString());
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_ExpatVersionInfo")]
-    internal static extern VersionInfo GetExpatVersion();
+    public static extern VersionInfo GetExpatVersion();
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetCurrentByteIndex")]
-    internal static extern int GetCurrentByteIndex(nint parser);
+    public static extern int GetCurrentByteIndex(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetCurrentByteCount")]
-    internal static extern int GetCurrentByteCount(nint parser);
+    public static extern int GetCurrentByteCount(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetCurrentLineNumber")]
-    internal static extern long GetCurrentLineNumber(nint parser);
+    public static extern long GetCurrentLineNumber(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetCurrentColumnNumber")]
-    internal static extern long GetCurrentColumnNumber(nint parser);
+    public static extern long GetCurrentColumnNumber(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetBillionLaughsAttackProtectionMaximumAmplification")]
     [return: MarshalAs(UnmanagedType.I1)]
-    internal static extern bool SetBillionLaughsAttackProtectionMaximumAmplification(nint parser, float maximumAmplificationFactor);
+    public static extern bool SetBillionLaughsAttackProtectionMaximumAmplification(nint parser, float maximumAmplificationFactor);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetBillionLaughsAttackProtectionActivationThreshold")]
-    internal static extern bool SetBillionLaughsAttackProtectionActivationThreshold(nint parser, long activationThresholdBytes);
+    public static extern bool SetBillionLaughsAttackProtectionActivationThreshold(nint parser, long activationThresholdBytes);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetUserData")]
-    internal static extern void SetUserData(nint parser, nint userData);
+    public static extern void SetUserData(nint parser, nint userData);
 
-    internal static unsafe nint GetUserData(nint parser)
+    public static unsafe nint GetUserData(nint parser)
     {
         return ((EXPAT_PARSER_INTERFACE*)parser)->UserData;
     }
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_UseParserAsHandlerArg")]
-    internal static extern void UseParserAsHandlerArg(nint parser);
+    public static extern void UseParserAsHandlerArg(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_GetSpecifiedAttributeCount")]
-    internal static extern int GetSpecifiedAttributeCount(nint parser);
+    public static extern int GetSpecifiedAttributeCount(nint parser);
 
     [DllImport(s_LibraryName, CallingConvention = s_CallConv, EntryPoint = "XML_SetEncoding")]
-    internal static extern Status SetEncoding(nint parser, string? encoding);
+    public static extern Status SetEncoding(nint parser, string? encoding);
 
-    internal static ParsingState GetParsingStatus(nint parser)
+    public static ParsingState GetParsingStatus(nint parser)
     {
         ParsingState result = default;
         _GetParsingStatus(parser, ref result);
