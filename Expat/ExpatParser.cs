@@ -130,6 +130,14 @@ public sealed class ExpatParser : IDisposable
             _parser = 0;
         }
 
+        _onStartElementCallback = null;
+        _onEndElementCallback = null;
+        _onCdataSectionStartCallback = null;
+        _onCdataSectionEndCallback = null;
+        _onCommentCallback = null;
+        _onCharacterDataCallback = null;
+        _onEntityDeclCallback = null;
+
         _cdataSection?.Clear();
         _cdataSection = null;
     }

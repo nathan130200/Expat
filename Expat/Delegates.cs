@@ -3,10 +3,10 @@
 namespace Expat;
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void StartElementHandler(nint userData, nint tagName, nint attrList);
+public delegate void StartElementHandler(nint userData, nint tagName_, nint attrList_);
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void EndElementHandler(nint userData, nint tagName);
+public delegate void EndElementHandler(nint userData, nint tagName_);
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void CharacterDataHandler(nint userData, nint buf, int len);
