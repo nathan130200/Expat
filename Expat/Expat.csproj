@@ -3,10 +3,31 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<RootNamespace>Expat</RootNamespace>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Expat</Title>
-		<Description>Expat bindings for .NET</Description>
+		<Description>Unofficial .NET bindings for libexpat.</Description>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/nathan130200/Expat</RepositoryUrl>
+		<PackageTags>expat, xml, xml parser, xmpp</PackageTags>
+		<IncludeSymbols>True</IncludeSymbols>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<AssemblyName>Expat.Net</AssemblyName>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
 
 </Project>
