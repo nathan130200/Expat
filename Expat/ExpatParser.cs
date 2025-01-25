@@ -42,14 +42,14 @@ public sealed class ExpatParser : IDisposable
 
         _userData = GCHandle.Alloc(this);
 
-        Init();
-
         _onStartElementCallback = new(OnStartElementCallback);
         _onEndElementCallback = new(OnEndElementCallback);
         _onCdataSectionStartCallback = new(OnCdataSectionStartCallback);
         _onCdataSectionEndCallback = new(OnCdataSectionEndCallback);
         _onCommentCallback = new(OnCommentCallback);
         _onCharacterDataCallback = new(OnCharacterDataCallback);
+
+        Init();
     }
 
     void Init()
@@ -60,7 +60,7 @@ public sealed class ExpatParser : IDisposable
         Native.XML_SetCommentHandler(_parser, _onCommentCallback);
         Native.XML_SetCharacterDataHandler(_parser, _onCharacterDataCallback);
 
-        if (_strict)
+        if (_strict) // strict mode, disallow DTD entities.
         {
             _onEntityDeclCallback = new(StrictEntityDeclCallback);
             Native.XML_SetEntityDeclHandler(_parser, _onEntityDeclCallback);

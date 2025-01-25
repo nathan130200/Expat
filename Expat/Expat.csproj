@@ -13,6 +13,7 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<AssemblyName>Expat.Net</AssemblyName>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
